@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { DateRangeFilterTile, useExecuteQuery } from '@sisense/sdk-ui';
-import * as DM from './sample-ecommerce';
+import * as DM from '../sample-ecommerce';
 import { Filter, filterFactory, measureFactory } from '@sisense/sdk-data';
 import * as d3 from 'd3';
-import './MyPackedBubbleChart.css'; // Separate CSS file for animation styling
+import './MyPackedBubbleChart.css'; 
 
 function MyPackedBubbleChart() {
     const [dateRangeFilter, setDateRangeFilter] = useState<Filter>(
@@ -12,7 +12,6 @@ function MyPackedBubbleChart() {
     const [packedData, setPackedData] = useState<any[]>([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // Query data
     const { data, isLoading, isError } = useExecuteQuery({
         dataSource: DM.DataSource,
         dimensions: [DM.Commerce.AgeRange],
@@ -31,7 +30,7 @@ function MyPackedBubbleChart() {
 
             const nodes = packLayout(root).descendants();
             setPackedData(nodes);
-            setIsDataLoaded(true); // Indicate data is fully loaded
+            setIsDataLoaded(true); 
         }
     }, [data, isLoading, isError, dateRangeFilter]);
 
@@ -48,7 +47,7 @@ function MyPackedBubbleChart() {
                     filter={dateRangeFilter}
                     onChange={(newFilter: Partial<Filter>) => {
                         setDateRangeFilter(newFilter as Filter);
-                        setIsDataLoaded(false); // Reset data loaded state when filter changes
+                        setIsDataLoaded(false); 
                     }} 
                 />
             </div>
@@ -60,7 +59,7 @@ function MyPackedBubbleChart() {
                                 className={isLoading ? 'loading-circle' : ''}
                                 cx={0}
                                 cy={0}
-                                r={isDataLoaded ? node.r : node.r * 0.9} // Shrink slightly if data is loading
+                                r={isDataLoaded ? node.r : node.r * 0.9} 
                                 fill={colorScale(node.value)}
                                 opacity={0.7}
                                 style={{

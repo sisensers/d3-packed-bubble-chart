@@ -1,8 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import BubbleChart from './BubbleChart';
-import PackedBubbleChart from './PackedBubbleChart';
+import PackedBubbleChart from './components/PackedBubbleChart';
 
 function App() {
   return (
