@@ -1,5 +1,8 @@
 # D3 Packed Bubble Chart with Sisense Compose SDK
 
+
+![packedbubble](https://github.com/user-attachments/assets/c398e663-a4d7-445c-b492-c8aecae57163)
+
 This project is a React component that displays a packed bubble chart using D3.js and the Sisense Compose SDK to manage queries. The chart supports filtering and real-time animations, offering smooth visual transitions between data updates.
 
 ## Table of Contents
