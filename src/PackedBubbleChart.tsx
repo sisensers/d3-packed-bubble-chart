@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
 import { DateRangeFilterTile, useExecuteQuery } from '@sisense/sdk-ui';
-import * as DM from './safetower-dev';
+import * as DM from './sample-ecommerce';
 import { Filter, filterFactory, measureFactory } from '@sisense/sdk-data';
 import * as d3 from 'd3';
+import './MyPackedBubbleChart.css'; // Separate CSS file for animation styling
 
 function MyPackedBubbleChart() {
     const [dateRangeFilter, setDateRangeFilter] = useState<Filter>(
-        filterFactory.dateRange(DM.event.event_date.Months)
+        filterFactory.dateRange(DM.Commerce.Date.Months)
     );
-    const [packedData, setPackedData] = useState<any[]>([]); 
+    const [packedData, setPackedData] = useState<any[]>([]);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     // Query data
     const { data, isLoading, isError } = useExecuteQuery({
         dataSource: DM.DataSource,
-        dimensions: [DM.indicator.parent_indicator],
-        measures: [measureFactory.countDistinct(DM.event.event_id, 'Total Revenue')],
-        filters: [dateRangeFilter] 
+        dimensions: [DM.Commerce.AgeRange],
+        measures: [measureFactory.sum(DM.Commerce.Revenue)],
+        filters: [dateRangeFilter]
     });
-    
+
     useEffect(() => {
         if (!isLoading && !isError && data) {
             const root = d3.hierarchy<any>({ children: data.rows.map(row => ({ name: row[0].data, value: row[1].data })) })
@@ -29,16 +31,9 @@ function MyPackedBubbleChart() {
 
             const nodes = packLayout(root).descendants();
             setPackedData(nodes);
+            setIsDataLoaded(true); // Indicate data is fully loaded
         }
     }, [data, isLoading, isError, dateRangeFilter]);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (isError) {
-        return <div>Error</div>;
-    }
 
     const colorScale = d3.scaleSequential(d3.interpolateViridis)
         .domain([d3.min(packedData, d => d.value) || 0, d3.max(packedData, d => d.value) || 1]);
@@ -49,26 +44,39 @@ function MyPackedBubbleChart() {
                 <DateRangeFilterTile
                     title="Date Range"
                     dataSource={DM.DataSource}
-                    attribute={DM.event.event_date.Months}
+                    attribute={DM.Commerce.Date.Months}
                     filter={dateRangeFilter}
-                    onChange={(newFilter: Partial<Filter>) => setDateRangeFilter(newFilter as Filter)} />
+                    onChange={(newFilter: Partial<Filter>) => {
+                        setDateRangeFilter(newFilter as Filter);
+                        setIsDataLoaded(false); // Reset data loaded state when filter changes
+                    }} 
+                />
             </div>
             <svg width={800} height={800}>
                 {packedData.map((node, i) => (
                     !node.children && (
-                        <g key={i} transform={`translate(${node.x},${node.y})`} style={{ transition: 'transform 0.5s' }}>
+                        <g key={i} transform={`translate(${node.x},${node.y})`}>
                             <circle
+                                className={isLoading ? 'loading-circle' : ''}
                                 cx={0}
                                 cy={0}
-                                r={node.r}
+                                r={isDataLoaded ? node.r : node.r * 0.9} // Shrink slightly if data is loading
                                 fill={colorScale(node.value)}
                                 opacity={0.7}
+                                style={{
+                                    transition: 'r 0.8s ease-in-out, transform 0.8s ease-in-out',
+                                    transformOrigin: 'center',
+                                }}
                             />
                             <text
                                 textAnchor="middle"
                                 dy="0.3em"
                                 fill="white"
                                 fontSize={12}
+                                style={{
+                                    transition: 'transform 0.8s ease-in-out',
+                                    transformOrigin: 'center',
+                                }}
                             >
                                 {node.data.name}
                             </text>
