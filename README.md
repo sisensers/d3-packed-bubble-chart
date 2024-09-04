@@ -1,4 +1,4 @@
-# My Packed Bubble Chart with Sisense Compose SDK
+# D3 Packed Bubble Chart with Sisense Compose SDK
 
 This project is a React component that displays a packed bubble chart using D3.js and the Sisense Compose SDK to manage queries. The chart supports filtering and real-time animations, offering smooth visual transitions between data updates.
 
@@ -9,6 +9,7 @@ This project is a React component that displays a packed bubble chart using D3.j
 - [Authentication](#authentication)
 - [Usage](#usage)
 - [Sisense Trial](#sisense-trial)
+- [How It Works](#how-it-works)
 - [License](#license)
 
 ## Dependencies
@@ -39,11 +40,12 @@ To run this project, you need to install the following dependencies:
    npm install
    ```
 
-3. Add a `.env` file to configure your environment variables (Sisense instance URL and API token). This file should contain:
+3. **Add a `.env` file** to configure your environment variables (Sisense instance URL and API token). This file should contain:
    ```bash
    REACT_APP_SISENSE_INSTANCE_URL=https://your-sisense-instance-url.com
    REACT_APP_SISENSE_API_TOKEN=your-api-token
    ```
+   These environment variables will be used to authenticate requests to your Sisense instance. Make sure the `.env` file is placed in the root directory and is added to `.gitignore` to prevent accidental commits of sensitive information.
 
 4. Start the development server:
    ```bash
@@ -67,16 +69,49 @@ To get started with a free trial of the Sisense Compose SDK, sign up here:
 
 Once signed up, you'll receive access to your Sisense instance and API credentials to use with this project.
 
-## Usage
+## How It Works
 
-This component allows users to visualize data in a packed bubble chart. It includes:
-- A date range filter to dynamically query and display data.
-- Real-time bubble resizing and positioning based on data changes.
-- Animations during data loading to enhance user experience.
+This project leverages the **Sisense Compose SDK** to query and fetch data, and D3.js to visualize that data in the form of a packed bubble chart.
 
-To customize the component:
-- Modify the dimensions and measures in the `useExecuteQuery` hook.
-- Adjust the D3 layout and appearance by changing the layout or color scales.
+- **Data Querying with Sisense Compose SDK**: The `useExecuteQuery` hook from the Sisense SDK is used to execute a query against the data source. The query retrieves both dimensions (e.g., `DM.Commerce.AgeRange`) and measures (e.g., `DM.Commerce.Cost` and `DM.Commerce.Revenue`). Here’s an example of how the query is set up:
+
+   ```javascript
+   const { data, isLoading, isError } = useExecuteQuery({
+     dataSource: DM.DataSource,
+     dimensions: [DM.Commerce.AgeRange],
+     measures: [
+       measureFactory.sum(DM.Commerce.Cost, 'Total Cost'),
+       measureFactory.sum(DM.Commerce.Revenue, 'Total Revenue')
+     ]
+   });
+   ```
+
+   The `data` variable contains the rows returned from the query, which are then mapped and passed into the D3.js visualization.
+
+- **Mapping Data to D3.js Visualization**: The data fetched by the Sisense SDK is processed and formatted into a structure compatible with D3.js. Each row of data contains an `ageRange`, `totalCost`, and `totalRevenue`, which are visualized as bubbles in the chart. The size of each bubble is determined by the total cost, while the y-axis position is based on total revenue:
+
+   ```javascript
+   const bubbleData = data.rows.map(row => ({
+     ageRange: row[0].data,
+     totalCost: row[1].data ?? 0,
+     totalRevenue: row[2].data ?? 0
+   }));
+   ```
+
+   D3.js is then used to create SVG elements (circles) for each data point, where the radius of the circle is scaled based on the total cost and positioned on the chart based on the total revenue:
+
+   ```javascript
+   svg.selectAll('circle')
+     .data(bubbleData)
+     .enter()
+     .append('circle')
+     .attr('cx', d => xScale(d.ageRange))
+     .attr('cy', d => yScale(d.totalRevenue))
+     .attr('r', d => radiusScale(d.totalCost))
+     .attr('fill', 'steelblue');
+   ```
+
+   This allows the data to be visualized as a packed bubble chart, where each bubble represents the total cost and revenue for a given age range.
 
 ## License
 
