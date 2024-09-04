@@ -1,46 +1,91 @@
-# Getting Started with Create React App
+Here is a README for your project that describes the dependencies, usage, and authentication requirements:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+# My Packed Bubble Chart with Sisense Compose SDK
 
-In the project directory, you can run:
+This project is a React component that displays a packed bubble chart using D3.js and the Sisense Compose SDK to manage queries. The chart supports filtering and real-time animations, offering smooth visual transitions between data updates.
 
-### `npm start`
+## Table of Contents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Dependencies](#dependencies)
+- [Setup](#setup)
+- [Authentication](#authentication)
+- [Usage](#usage)
+- [Sisense Trial](#sisense-trial)
+- [License](#license)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Dependencies
 
-### `npm test`
+To run this project, you need to install the following dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### NPM Packages:
+- **React**: `npm install react react-dom`
+- **D3.js**: `npm install d3`
+- **Sisense Compose SDK**: `npm install @sisense/sdk-ui @sisense/sdk-data`
+- **TypeScript** (optional, but recommended): `npm install typescript @types/react @types/react-dom`
+- **Other Development Tools**: For testing and building, you may want to install development dependencies such as `webpack`, `babel`, etc., depending on your environment.
 
-### `npm run build`
+### Development Environment:
+- Node.js version 14.x or later
+- A modern web browser
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone this repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Install the necessary dependencies:
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+3. Add a `.env` file to configure your environment variables (Sisense instance URL and API token). This file should contain:
+   ```bash
+   REACT_APP_SISENSE_INSTANCE_URL=https://your-sisense-instance-url.com
+   REACT_APP_SISENSE_API_TOKEN=your-api-token
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+4. Start the development server:
+   ```bash
+   npm start
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Authentication
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This project uses the **Sisense Compose SDK** to manage queries and retrieve data. You will need a Sisense instance URL and an API Token to authenticate requests.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- **Sisense Instance URL**: The URL where your Sisense instance is hosted.
+- **API Token**: A token generated from your Sisense platform that allows access to the API.
 
-## Learn More
+If you're not a Sisense customer, you can still try this out by signing up for a **free trial** of the Sisense Compose SDK.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Sisense Trial
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To get started with a free trial of the Sisense Compose SDK, sign up here:
+
+[Sign up for a free trial](https://www.sisense.com/platform/compose-sdk-free-trial/)
+
+Once signed up, you'll receive access to your Sisense instance and API credentials to use with this project.
+
+## Usage
+
+This component allows users to visualize data in a packed bubble chart. It includes:
+- A date range filter to dynamically query and display data.
+- Real-time bubble resizing and positioning based on data changes.
+- Animations during data loading to enhance user experience.
+
+To customize the component:
+- Modify the dimensions and measures in the `useExecuteQuery` hook.
+- Adjust the D3 layout and appearance by changing the layout or color scales.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+This README provides all the necessary information for setting up and running the project, along with instructions for non-Sisense customers to sign up for a free trial. Let me know if you'd like any additional details!
