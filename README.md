@@ -1,7 +1,3 @@
-Here is a README for your project that describes the dependencies, usage, and authentication requirements:
-
----
-
 # My Packed Bubble Chart with Sisense Compose SDK
 
 This project is a React component that displays a packed bubble chart using D3.js and the Sisense Compose SDK to manage queries. The chart supports filtering and real-time animations, offering smooth visual transitions between data updates.
@@ -85,7 +81,3 @@ To customize the component:
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
-
----
-
-This README provides all the necessary information for setting up and running the project, along with instructions for non-Sisense customers to sign up for a free trial. Let me know if you'd like any additional details!
